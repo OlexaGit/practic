@@ -1,9 +1,13 @@
-import { Form } from './Form/Form';
-import { Contacts } from './Contacts/Contacts';
-import { Filter } from './Filter/Filter';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { fetchContacts } from 'redux/operations';
+import { Route, Routes } from 'react-router-dom';
+import { SharedLayout } from './SharedLayout/SharedLayout';
+import { Home } from 'pages/Home';
+import { Register } from 'pages/Register';
+import { Login } from 'pages/Login';
+import { Contact } from 'pages/Contact';
+import { PrivateRoute } from './PrivateRoute';
 
 export const App = () => {
   const dispatch = useDispatch();
@@ -11,18 +15,16 @@ export const App = () => {
     dispatch(fetchContacts());
   }, [dispatch]);
   return (
-    <div>
-      <header>
-        <h1>Phonebook</h1>
-      </header>
-      <section>
-        <Form />
-      </section>
-      <section>
-        <h2>Contacts</h2>
-        <Filter />
-        <Contacts />
-      </section>
-    </div>
+    <Routes>
+      <Route path="/" element={<SharedLayout />}>
+        <Route index element={<Home />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/contact"
+          element={<PrivateRoute redirectTo="/login" component={<Contact />} />}
+        />
+      </Route>
+    </Routes>
   );
 };
